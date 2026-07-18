@@ -1,0 +1,219 @@
+{
+  "schema_version": "1",
+  "run_id": "01KXK4WV2CS008X8RB9EW34Z5P",
+  "created_at": "2026-07-15T15:06:52.526629Z",
+  "produced_by": "baseline (claude-sonnet-5)",
+  "token_cost": {
+    "stage": "baseline",
+    "model": "claude-sonnet-5",
+    "input_tokens": 20,
+    "output_tokens": 17812,
+    "cache_read_tokens": 202456,
+    "cache_write_tokens": 44479,
+    "computed_cost_usd": 0.494773,
+    "reported_cost_usd": 0.5954898,
+    "latency_ms": 168853,
+    "n_turns": 14,
+    "degradations": [],
+    "budget_exhausted": false
+  },
+  "ticker": "DOV",
+  "company_name": "Dover Corporation",
+  "as_of": "2026-07-15",
+  "thesis_summary": "Dover is a diversified industrial manufacturer (Engineered Products, Clean Energy & Fueling, Imaging & Identification, Pumps & Process Solutions, Climate & Sustainability Technologies) generating $8.1B trailing revenue at a ~17% operating margin and ~1.5x net debt/EBITDA. FY2025 showed accelerating revenue (+4.5%), gross margin expansion (+160bps to 39.8%) and operating-earnings growth outpacing sales (+13.8%), with bookings up 6.0% and Q1 2026 momentum building (revenue +10.1%, bookings +23.8%). However, the most recent quarter shows gross margin contracting 110bps YoY on portfolio mix, net earnings fell sharply on a one-off 2024 disposition gain comp, organic growth is materially softer than headline growth, and new euro-denominated debt is pushing interest expense higher — all of which complicate the 'clean improving-margin' read from the screen alone. Note: no true 2-10B mid-cap industrial matched the profitable/improving-margin screen; DOV ($28.5B market cap) was the smallest-cap, best-fitting name in the available universe.",
+  "valuation_snapshot": {
+    "market_cap": 28536098816.0,
+    "trailing_pe": 26.45568,
+    "revenue_ttm": 8092571000.0,
+    "operating_margin": 0.16970638873603952
+  },
+  "bull_case": [
+    {
+      "text": "FY2025 revenue grew 4.5% to $8.1B, accelerating further into Q1 2026 with 10.1% YoY growth, evidencing broadening demand.",
+      "citations": [
+        {
+          "source_ref": "0000029905-26-000009#7¶1",
+          "quote": "consolidated revenue was $8.1 billion, an increase of $346.7 million or 4.5%, as compared to the prior year."
+        }
+      ],
+      "claim_type": "fact"
+    },
+    {
+      "text": "Gross margin expanded meaningfully in FY2025, up 160bps to 39.8%, driven by pricing, productivity, and mix, not just one-off items.",
+      "citations": [
+        {
+          "source_ref": "0000029905-26-000009#7¶6",
+          "quote": "Gross profit margin increased 160 basis points to 39.8% as compared to the prior year driven by favorable price versus cost dynamics, productivity initiatives, favorable portfolio mix and benefits from restructuring actions."
+        }
+      ],
+      "claim_type": "fact"
+    },
+    {
+      "text": "Operating earnings grew 13.8% in FY2025, nearly 3x the rate of revenue growth, indicating positive operating leverage.",
+      "citations": [
+        {
+          "source_ref": "0000029905-26-000009#7¶5",
+          "quote": "Operating earnings 1,373,361 1,206,355 13.8 %"
+        }
+      ],
+      "claim_type": "fact"
+    },
+    {
+      "text": "Forward demand indicators are strong: FY2025 bookings rose 6.0% to $8.1B, broad-based across nearly all segments.",
+      "citations": [
+        {
+          "source_ref": "0000029905-26-000009#7¶2",
+          "quote": "Bookings increased 6.0% over the prior year to $8.1 billion for the year ended December 31, 2025."
+        }
+      ],
+      "claim_type": "fact"
+    },
+    {
+      "text": "Momentum has continued into 2026: Q1 revenue rose 10.1% YoY and bookings surged 23.8% YoY, suggesting the growth/margin inflection is not a one-quarter blip.",
+      "citations": [
+        {
+          "source_ref": "0000029905-26-000015#2¶3",
+          "quote": "In the first quarter of 2026, revenue was $2.1 billion, which increased $187.6 million, or 10.1%, as compared to the first quarter of 2025."
+        },
+        {
+          "source_ref": "0000029905-26-000015#2¶4",
+          "quote": "Bookings were $2.5 billion for the three months ended March 31, 2026, an increase of $474.1 million or 23.8% compared to the prior year comparable quarter."
+        }
+      ],
+      "claim_type": "fact"
+    },
+    {
+      "text": "Substantial international diversification (46% of revenue) reduces reliance on any single economy and supports the company's stated global growth strategy.",
+      "citations": [
+        {
+          "source_ref": "0000029905-26-000009#1A¶3",
+          "quote": "Approximately 46% of our revenues for both 2025 and 2024 were derived outside the United States and we expect international sales to continue to represent a significant portion of our revenues given our global growth strategy."
+        }
+      ],
+      "claim_type": "interpretation"
+    },
+    {
+      "text": "Management is actively deploying capital via bolt-on M&A and buybacks, funded from cash on hand rather than incremental debt, signaling balance-sheet flexibility.",
+      "citations": [
+        {
+          "source_ref": "0000029905-26-000009#7¶3",
+          "quote": "During the year ended December 31, 2025, the Company completed four business acquisitions totaling $665.3 million, net of cash acquired and inclusive of contingent consideration and measurement period adjustments."
+        },
+        {
+          "source_ref": "0000029905-26-000009#7¶4",
+          "quote": "The Company funded the 2025 ASR Program with cash on hand."
+        }
+      ],
+      "claim_type": "fact"
+    },
+    {
+      "text": "Net interest costs declined sharply in FY2025 (-60.9%) on higher interest income, improving the earnings quality below the operating line.",
+      "citations": [
+        {
+          "source_ref": "0000029905-26-000009#7¶7",
+          "quote": "interest expense, net of interest income, decreased $57.3 million, or 60.9%, to $36.7 million compared with 2024"
+        }
+      ],
+      "claim_type": "fact"
+    }
+  ],
+  "bear_case": [
+    {
+      "target_claim_idx": 1,
+      "text": "The margin-expansion trend already reversed in the most recent reported quarter: Q1 2026 gross margin fell 110bps YoY to 38.9% on unfavorable portfolio mix, directly contradicting the FY2025 expansion narrative.",
+      "citations": [
+        {
+          "source_ref": "0000029905-26-000015#2¶7",
+          "quote": "Gross profit for the three months ended March 31, 2026 increased $52.6 million, or 7.1%, and gross profit margin decreased 110 basis points to 38.9%, versus the prior year comparable quarter."
+        }
+      ],
+      "severity": "material"
+    },
+    {
+      "target_claim_idx": 2,
+      "text": "Despite 13.8% operating-earnings growth, FY2025 net earnings fell 59.4% and earnings from continuing operations fell 21.6%, because 2024 included a large one-off disposition gain; the trailing P/E and bottom-line trend are distorted by this comp and are not simply a story of expanding profitability.",
+      "citations": [
+        {
+          "source_ref": "0000029905-26-000009#7¶5",
+          "quote": "Net earnings $ 1,093,956 $ 2,697,126 (59.4) %"
+        },
+        {
+          "source_ref": "0000029905-26-000009#7¶10",
+          "quote": "For the year ended December 31, 2025, earnings from continuing operations decreased $302.5 million, or 21.6%, to $1.1 billion, or $7.97 per diluted share, compared with earnings from continuing operations of $1.4 billion"
+        }
+      ],
+      "severity": "material"
+    },
+    {
+      "target_claim_idx": 0,
+      "text": "Headline revenue growth is substantially inorganic: FY2025 organic growth was only 1.6% of the 4.5% headline figure, and Q1 2026's 10.1% growth included 2.9 points of FX tailwind alone — underlying demand growth is weaker than topline suggests.",
+      "citations": [
+        {
+          "source_ref": "0000029905-26-000009#7¶6",
+          "quote": "Organic revenue growth of 1.6% is primarily driven by robust trends in our secular-growth-exposed end markets and above and below-ground retail fueling and pricing actions"
+        },
+        {
+          "source_ref": "0000029905-26-000015#2¶3",
+          "quote": "a favorable impact from foreign currency translation of 2.9% and acquisition-related revenue growth of 1.9%"
+        }
+      ],
+      "severity": "material"
+    },
+    {
+      "target_claim_idx": 5,
+      "text": "The same 46% international revenue exposure cited as diversification is explicitly flagged by management as a risk source, including tariffs and retaliatory trade actions — the bull framing and the risk-factor framing are in tension.",
+      "citations": [
+        {
+          "source_ref": "0000029905-26-000009#1A¶3",
+          "quote": "the imposition of duties and tariffs and other trade barriers and retaliatory countermeasures"
+        }
+      ],
+      "severity": "material"
+    },
+    {
+      "target_claim_idx": 7,
+      "text": "The FY2025 favorable interest-expense trend reversed in Q1 2026: net interest expense rose 110.3% YoY to $15.5M following issuance of new euro-denominated notes in Q4 2025, indicating rising financing costs going forward.",
+      "citations": [
+        {
+          "source_ref": "0000029905-26-000015#2¶8",
+          "quote": "interest expense, net of interest income, increased $8.1 million, or 110.3%, to $15.5 million compared to the prior year comparable quarter."
+        }
+      ],
+      "severity": "material"
+    },
+    {
+      "target_claim_idx": 1,
+      "text": "Margin gains coincide with recurring restructuring charges ($78.0M in FY2025, $36.8M in Q1 2026) and outright organic declines in two of five segments (Engineered Products -6.6%, Climate & Sustainability -2.1% in FY2025), suggesting part of the margin story is cost-cutting rather than broad-based organic strength.",
+      "citations": [
+        {
+          "source_ref": "0000029905-26-000009#7¶2",
+          "quote": "partially offset by the Engineered Products and Climate & Sustainability Technologies segments which declined 6.6% and 2.1%, respectively."
+        },
+        {
+          "source_ref": "0000029905-26-000009#7¶3",
+          "quote": "Restructuring and other costs of $78.0 million included restructuring charges of $56.7 million and other costs of $21.2 million."
+        }
+      ],
+      "severity": "minor"
+    }
+  ],
+  "unresolved_disagreements": [
+    "Whether the FY2025 160bps gross-margin expansion is a durable trend or already reversing — Q1 2026 shows a 110bps YoY contraction attributed to portfolio mix, and the filings do not reconcile the two directions.",
+    "Whether revenue/bookings acceleration reflects genuine organic demand strength or is substantially inflated by FX and M&A — FY2025 organic growth was 1.6% versus 4.5% headline, and Q1 2026 FX alone contributed 2.9 of the 10.1 points of growth.",
+    "Whether the sharp decline in net earnings and earnings from continuing operations is purely a comp artifact from lapping the 2024 disposition gain, or also reflects genuine cost/margin pressure below the operating line — MD&A attributes it to the comp but does not fully explain the decline against 13.8% operating-earnings growth."
+  ],
+  "confidence": "medium",
+  "confidence_rationale": "No true 2-10B mid-cap industrial met the profitable/improving-margin screen criteria; DOV at ~$28.5B market cap was the closest, smallest-cap qualifying name, so the 'mid-cap' framing is a stretch. Filing-sourced data is directly cited and internally consistent for the FY2025 period, but the most recent 10-Q shows margin and net-interest trends partially reversing versus the FY2025 narrative, and organic growth is materially softer than headline growth, warranting caution rather than high confidence.",
+  "cost": {
+    "run_id": "01KXK4WV2CS008X8RB9EW34Z5P",
+    "total_cost_usd": 0.494773,
+    "total_input_tokens": 20,
+    "total_output_tokens": 17812,
+    "total_cache_read_tokens": 202456,
+    "n_calls": 1,
+    "by_stage_cost_usd": {
+      "baseline": 0.494773
+    }
+  },
+  "disclaimer": "This memo is an engineering demonstration of multi-agent orchestration. Nothing in it is investment advice or a recommendation to transact in any security. It describes evidence and disagreement drawn from public filings; it is not a research recommendation."
+}

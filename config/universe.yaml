@@ -1,0 +1,64 @@
+# Ticker universe definition.
+#
+# `tickers` is the committed static universe the screener operates within. It is generated
+# once by `desk universe build` from the SEC ticker map filtered by yfinance market cap
+# (~200 liquid US large/mid caps), then committed so runs are reproducible.
+#
+# The committed list below is a hand-picked, sector-diverse ~40-name set (industrials-weighted).
+# The `generation` parameters describe the intended larger auto-generated universe.
+generation:
+  target_size: 200
+  min_market_cap_usd: 2_000_000_000     # >= $2B (mid-cap floor)
+  source: "SEC company_tickers.json filtered by yfinance market cap"
+
+# Committed universe: a sector-diverse set of ~40 liquid US large/mid caps, weighted toward
+# Industrials since the example screening queries target mid-cap industrials. Hand-picked from well-known names; the full ~200-name auto-generation (from the SEC ticker map filtered
+# by yfinance market cap) is a later enhancement. Metrics are
+# computed lazily and cached, so listing a name here costs nothing until it is screened.
+tickers:
+  # Industrials (emphasis)
+  - CAT
+  - DE
+  - HON
+  - EMR
+  - ETN
+  - PH
+  - ITW
+  - ROK
+  - DOV
+  - GWW
+  - PCAR
+  - CMI
+  - GE
+  - RTX
+  - LMT
+  - BA
+  - UNP
+  - FDX
+  - GD
+  - NOC
+  # Technology
+  - AAPL
+  - MSFT
+  - NVDA
+  - AVGO
+  - TXN
+  - QCOM
+  # Communication / Consumer
+  - GOOGL
+  - AMZN
+  - HD
+  - NKE
+  # Health care
+  - JNJ
+  - PFE
+  - MRK
+  - ABT
+  # Financials
+  - JPM
+  - GS
+  # Energy / Materials / Staples
+  - XOM
+  - CVX
+  - LIN
+  - PG

@@ -1,0 +1,30 @@
+# Per-model price in US dollars per million tokens (MTok).
+# Source: Anthropic pricing (https://platform.claude.com/docs/en/pricing.md), captured 2026-07-15.
+#   input        = uncached input tokens (full price)
+#   output       = output tokens
+#   cache_write  = writing tokens to the prompt cache. Ephemeral 5-minute TTL = 1.25x input.
+#                  (A 1-hour TTL would be 2x input; the SDK path here uses the default 5m TTL.)
+#   cache_read   = reading tokens from the prompt cache = ~0.1x input.
+#
+# The ledger computes computed_cost_usd from THIS file so tier/pricing experiments re-price
+# consistently regardless of what the SDK reports as total_cost_usd.
+#
+# NOTE: claude-sonnet-5 carries introductory pricing of $2.00/$10.00 per MTok through
+# 2026-08-31. We record the STANDARD $3.00/$15.00 here so historical runs re-price on a
+# stable basis; adjust if you want to reflect the promo window.
+models:
+  claude-haiku-4-5:
+    input: 1.00
+    output: 5.00
+    cache_write: 1.25
+    cache_read: 0.10
+  claude-sonnet-5:
+    input: 3.00
+    output: 15.00
+    cache_write: 3.75
+    cache_read: 0.30
+  claude-opus-4-8:
+    input: 5.00
+    output: 25.00
+    cache_write: 6.25
+    cache_read: 0.50

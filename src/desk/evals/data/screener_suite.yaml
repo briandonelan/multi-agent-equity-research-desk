@@ -1,0 +1,252 @@
+# Screener evaluation suite. Runs the real screener agent against the synthetic fixture universe
+# (tests/fixtures/screener/universe_fixture.yaml). `golden_filters` are the canonical hand-written
+# filters that reproduce `expected_tickers` — the consistency test asserts this without any LLM.
+# `acceptable_extra` tickers are defensible inclusions and are not penalized.
+
+queries:
+  # --- single-dimension ---
+  - id: q01_smid_tech
+    text: "small and mid-cap technology companies"
+    dimensions: {size: small-and-mid, sector: technology}
+    golden_filters:
+      - {field: sector, op: "==", value: Technology}
+      - {field: market_cap, op: "<", value: 10000000000}
+    expected_tickers: [TEC3, TEC6]
+    acceptable_extra: []
+    paraphrases:
+      - "technology stocks below large-cap size"
+      - "tech names in the small to mid cap range"
+      - "which technology companies are not large caps?"
+      - "smaller tech companies, mid cap and under"
+      - "screen for sub-$10B technology firms"
+    perturbations:
+      - change: {size: large-cap}
+        text: "large-cap technology companies"
+        expect_moved_fields: [market_cap]
+    starve: false
+
+  - id: q02_industrials_low_leverage
+    text: "industrials with low leverage"
+    dimensions: {sector: industrials, leverage: low}
+    golden_filters:
+      - {field: sector, op: "==", value: Industrials}
+      - {field: net_debt_to_ebitda, op: "<", value: 1.0}
+    expected_tickers: [IND6, IND8, IND10]
+    acceptable_extra: []
+    paraphrases:
+      - "industrial companies that aren't carrying much debt"
+      - "low-leverage names in the industrials sector"
+      - "industrials with strong balance sheets, little net debt"
+      - "which industrials have low net debt to EBITDA?"
+      - "conservatively financed industrial stocks"
+    perturbations:
+      - change: {leverage: high}
+        text: "industrials with high leverage"
+        expect_moved_fields: [net_debt_to_ebitda]
+    starve: false
+
+  # --- multi-dimension (3+) ---
+  - id: q03_profitable_midcap_industrials_improving
+    text: "profitable mid-cap industrials with improving margins"
+    dimensions: {profitability: profitable, size: mid-cap, sector: industrials, trend: improving}
+    golden_filters:
+      - {field: sector, op: "==", value: Industrials}
+      - {field: market_cap, op: ">=", value: 2000000000}
+      - {field: market_cap, op: "<", value: 10000000000}
+      - {field: operating_margin, op: ">", value: 0}
+      - {field: operating_margin_trend, op: ">", value: 0}
+    expected_tickers: [IND2, IND5, IND6, IND7, IND9]
+    acceptable_extra: []
+    paraphrases:
+      - "mid-sized industrial companies that make money and are seeing margins improve"
+      - "profitable industrials in the mid-cap range with a positive margin trend"
+      - "industrials, mid cap, positive operating margin, margins trending up"
+      - "which mid-cap industrial firms are profitable with expanding margins?"
+      - "screen mid-cap industrials for profitability and margin improvement"
+    perturbations:
+      - change: {trend: deteriorating}
+        text: "profitable mid-cap industrials with deteriorating margins"
+        expect_moved_fields: [operating_margin_trend, gross_margin_trend]
+      - change: {size: large-cap}
+        text: "profitable large-cap industrials with improving margins"
+        expect_moved_fields: [market_cap]
+    starve: false
+
+  - id: q04_undervalued_midcap_industrials_margins
+    text: "undervalued mid-cap industrials with improving margins"
+    dimensions: {valuation: undervalued, size: mid-cap, sector: industrials, trend: improving}
+    golden_filters:
+      - {field: sector, op: "==", value: Industrials}
+      - {field: market_cap, op: ">=", value: 2000000000}
+      - {field: market_cap, op: "<", value: 10000000000}
+      - {field: operating_margin_trend, op: ">", value: 0}
+      - {field: trailing_pe, op: "<", value: 15}
+    expected_tickers: [IND2, IND5, IND7]
+    acceptable_extra: [IND9]
+    paraphrases:
+      - "cheap industrial names in the middle of the cap range where margins are getting better"
+      - "mid cap industrial stocks, attractively valued, margin trajectory positive"
+      - "industrials, mid-sized, trading below intrinsic value, with expanding profitability"
+      - "which mid-cap industrial companies look undervalued and have improving margins?"
+      - "screen for value in mid-cap industrials showing margin improvement"
+    perturbations:
+      - change: {size: large-cap}
+        text: "undervalued large-cap industrials with improving margins"
+        expect_moved_fields: [market_cap]
+      - change: {trend: deteriorating}
+        text: "undervalued mid-cap industrials with deteriorating margins"
+        expect_moved_fields: [operating_margin_trend, gross_margin_trend]
+    starve: false
+
+  - id: q05_quality_tech
+    text: "quality technology names"
+    dimensions: {quality: high, sector: technology}
+    golden_filters:
+      - {field: sector, op: "==", value: Technology}
+      - {field: operating_margin, op: ">", value: 0.25}
+      - {field: net_debt_to_ebitda, op: "<", value: 1.0}
+    expected_tickers: [TEC1, TEC2, TEC4, TEC8]
+    acceptable_extra: [TEC9]
+    paraphrases:
+      - "high-quality technology businesses"
+      - "tech companies with strong margins and clean balance sheets"
+      - "durable, well-run technology names"
+      - "which technology firms qualify as quality compounders?"
+      - "screen technology for high margins and low leverage"
+    perturbations: []
+    starve: false
+
+  - id: q06_large_healthcare_growth
+    text: "large-cap healthcare with strong revenue growth"
+    dimensions: {size: large-cap, sector: healthcare, growth: strong}
+    golden_filters:
+      - {field: sector, op: "==", value: Healthcare}
+      - {field: market_cap, op: ">=", value: 10000000000}
+      - {field: revenue_growth_yoy, op: ">", value: 0.15}
+    expected_tickers: [HLT2, HLT4, HLT9]
+    acceptable_extra: []
+    paraphrases:
+      - "big healthcare companies growing revenue fast"
+      - "large-cap healthcare names with strong top-line growth"
+      - "healthcare, large cap, high revenue growth"
+      - "which large healthcare firms have strong sales growth?"
+      - "screen large-cap healthcare for revenue momentum"
+    perturbations:
+      - change: {sector: technology}
+        text: "large-cap technology with strong revenue growth"
+        expect_moved_fields: [sector]
+    starve: false
+
+  - id: q07_large_tech_growth
+    text: "large-cap technology companies with strong revenue growth"
+    dimensions: {size: large-cap, sector: technology, growth: strong}
+    golden_filters:
+      - {field: sector, op: "==", value: Technology}
+      - {field: market_cap, op: ">=", value: 10000000000}
+      - {field: revenue_growth_yoy, op: ">", value: 0.15}
+    expected_tickers: [TEC1, TEC4, TEC7, TEC8]
+    acceptable_extra: []
+    paraphrases:
+      - "big tech companies growing revenue quickly"
+      - "large technology names with strong sales growth"
+      - "technology, large cap, high revenue growth"
+      - "which large-cap tech firms are growing fast?"
+      - "screen large technology stocks for revenue momentum"
+    perturbations:
+      - change: {growth: weak}
+        text: "large-cap technology companies with slow revenue growth"
+        expect_moved_fields: [revenue_growth_yoy]
+    starve: false
+
+  - id: q08_cheap_industrials_expanding
+    text: "cheap industrials trading below 12x earnings with expanding margins"
+    dimensions: {valuation: cheap, sector: industrials, trend: improving}
+    golden_filters:
+      - {field: sector, op: "==", value: Industrials}
+      - {field: trailing_pe, op: "<", value: 12}
+      - {field: operating_margin_trend, op: ">", value: 0}
+    expected_tickers: [IND7, IND10]
+    acceptable_extra: []
+    paraphrases:
+      - "industrial stocks under 12 times earnings with margins expanding"
+      - "cheap industrials, sub-12 P/E, improving profitability"
+      - "industrials trading below 12x with a rising margin trend"
+      - "which industrials are under 12x earnings and expanding margins?"
+      - "value industrials below 12 P/E with margin expansion"
+    perturbations:
+      - change: {valuation: expensive}
+        text: "industrials trading above 25x earnings with expanding margins"
+        expect_moved_fields: [trailing_pe]
+    starve: false
+
+  - id: q09_defensive_healthcare_steady
+    text: "defensive healthcare with steady revenue"
+    dimensions: {sector: healthcare, growth: steady}
+    golden_filters:
+      - {field: sector, op: "==", value: Healthcare}
+      - {field: revenue_growth_yoy, op: "between", value: [0.0, 0.05]}
+    expected_tickers: [HLT1, HLT5, HLT6, HLT7]
+    acceptable_extra: []
+    paraphrases:
+      - "steady, defensive healthcare companies"
+      - "healthcare names with stable, low revenue growth"
+      - "defensive healthcare, revenue neither shrinking nor spiking"
+      - "which healthcare firms have steady top-line revenue?"
+      - "screen defensive healthcare for revenue stability"
+    perturbations: []
+    starve: false
+
+  # --- starve queries (match < 2; must relax the least-central filter and disclose it) ---
+  - id: q10_starve_megacap_cheap_industrials
+    text: "profitable mega-cap industrials trading under 8x earnings"
+    dimensions: {size: mega-cap, sector: industrials, valuation: cheap, profitability: profitable}
+    golden_filters:
+      - {field: sector, op: "==", value: Industrials}
+      - {field: market_cap, op: ">", value: 50000000000}
+      - {field: trailing_pe, op: "<", value: 8}
+    expected_tickers: []
+    acceptable_extra: []
+    paraphrases:
+      - "enormous industrial companies that are also dirt cheap on earnings"
+      - "mega-cap industrials under 8 times earnings"
+      - "the biggest industrials, trading below 8x P/E"
+      - "which giant industrial firms trade under 8x earnings?"
+      - "screen mega-cap industrials for a sub-8 P/E"
+    starve: true
+    expected_relaxation_field: market_cap
+
+  - id: q11_starve_tech_ultracheap_hypergrowth
+    text: "technology companies trading under 5x earnings with 40%+ revenue growth"
+    dimensions: {sector: technology, valuation: cheap, growth: strong}
+    golden_filters:
+      - {field: sector, op: "==", value: Technology}
+      - {field: trailing_pe, op: "<", value: 5}
+      - {field: revenue_growth_yoy, op: ">", value: 0.40}
+    expected_tickers: []
+    acceptable_extra: []
+    paraphrases:
+      - "tech stocks under 5 times earnings growing revenue over 40 percent"
+      - "ultra-cheap technology names with explosive growth"
+      - "technology, sub-5 P/E, 40%+ revenue growth"
+      - "which tech firms trade under 5x earnings and grow 40%+?"
+      - "screen technology for a sub-5 P/E and 40 percent growth"
+    starve: true
+    expected_relaxation_field: trailing_pe
+
+  - id: q12_starve_healthcare_net_cash
+    text: "healthcare companies with net cash and expanding margins"
+    dimensions: {sector: healthcare, leverage: net-cash, trend: improving}
+    golden_filters:
+      - {field: sector, op: "==", value: Healthcare}
+      - {field: net_debt_to_ebitda, op: "<", value: 0}
+      - {field: operating_margin_trend, op: ">", value: 0}
+    expected_tickers: [HLT6]
+    acceptable_extra: []
+    paraphrases:
+      - "healthcare names sitting on net cash with margins improving"
+      - "debt-free healthcare companies with expanding margins"
+      - "healthcare, negative net debt, positive margin trend"
+      - "which healthcare firms have net cash and rising margins?"
+      - "screen healthcare for a net cash balance sheet and margin expansion"
+    starve: true
+    expected_relaxation_field: net_debt_to_ebitda

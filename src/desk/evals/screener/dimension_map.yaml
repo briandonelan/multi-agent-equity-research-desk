@@ -1,0 +1,14 @@
+# Maps an intent dimension (as annotated in screener_suite.yaml) to the metric field(s) whose
+# filter should carry it. Coverage passes if ANY field in the set is filtered. Perturbation's
+# expect_moved_fields draws from the same sets.
+dimensions:
+  size: [market_cap]
+  valuation: [trailing_pe]
+  growth: [revenue_growth_yoy]
+  leverage: [net_debt_to_ebitda]
+  sector: [sector]
+  # margin trend, either direction:
+  trend: [operating_margin_trend, gross_margin_trend]
+  # fuzzy dimensions map to a SET of acceptable fields:
+  profitability: [operating_margin, gross_margin]
+  quality: [operating_margin, net_debt_to_ebitda, gross_margin]

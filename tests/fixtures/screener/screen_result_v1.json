@@ -1,0 +1,22 @@
+{
+  "schema_version": "1",
+  "run_id": "01OLDRUNV1EXAMPLE0000000",
+  "created_at": "2026-06-01T12:00:00Z",
+  "produced_by": "screener (claude-haiku-4-5)",
+  "token_cost": null,
+  "interpreted_intent": "Profitable mid-cap industrials with improving operating margins.",
+  "filters_applied": [
+    {"field": "sector", "op": "==", "value": "Industrials"},
+    {"field": "market_cap", "op": "between", "value": [2000000000, 10000000000]},
+    {"field": "operating_margin", "op": ">", "value": 0.0},
+    {"field": "operating_margin_trend", "op": ">", "value": 0.0}
+  ],
+  "candidates": [
+    {"ticker": "IND2", "cik": "0000000001", "company_name": "Beacon Tools Inc",
+     "rationale": "Mid-cap industrial, profitable, margins improving.",
+     "metrics_snapshot": {"operating_margin": 0.18, "operating_margin_trend": 0.02}},
+    {"ticker": "IND7", "cik": "0000000002", "company_name": "Granite Controls",
+     "rationale": "High-margin mid-cap with a positive margin trend.",
+     "metrics_snapshot": {"operating_margin": 0.22, "operating_margin_trend": 0.03}}
+  ]
+}

@@ -1,0 +1,54 @@
+# Per-stage token budgets and orchestration policy.
+#
+# soft_cap: when the run's running token total for this stage exceeds soft_cap, the
+#           degradation ladder engages (see `degradation`). Each rung is logged with a reason.
+# hard_cap: when exceeded, the stage returns a partial artifact flagged budget_exhausted=true;
+#           the synthesizer must surface this in the memo.
+# Token counts are input+output for the stage (summed across turns/candidates as noted).
+
+defaults:
+  timeout_seconds: 450        # per-stage wall clock; exceed -> cancel + record failure.
+                              # The Opus critic reasons over full filings (median ~90s, and slower
+                              # under concurrency); 180s truncated it too often. Timeouts are
+                              # recorded distinctly (result.json n_timeouts) so they never masquerade
+                              # as genuine contract failures in the scoreboard.
+  transport_retries: 1        # one retry on transport errors
+  repair_retries: 1           # one repair retry on contract-validation failure
+
+# Explicit DAG concurrency: how many (reader -> critic) ticker chains run at once.
+concurrency: 2
+
+# Handoff mode for the critic:
+#   contract      -> critic sees only ThesisDraft.for_critic() (isolation ON, default)
+#   full_context  -> critic additionally receives the reader's full transcript
+handoff_mode: contract
+
+stages:
+  screener:
+    soft_cap: 40000
+    hard_cap: 80000
+    # Enough turns to screen, inspect each candidate's metrics, and re-run once after relaxing
+    # a filter when a request starves. 10 was too tight for multi-dimension / starve queries.
+    max_turns: 20
+  reader:
+    soft_cap: 120000
+    hard_cap: 240000
+  critic:
+    soft_cap: 120000
+    hard_cap: 240000
+  synthesizer:
+    soft_cap: 60000
+    hard_cap: 120000
+  baseline:
+    soft_cap: 250000
+    hard_cap: 500000
+
+# Degradation ladder, applied in order when a stage's soft_cap is exceeded.
+# Each rung is a named action the runner knows how to apply.
+degradation:
+  ladder:
+    - reduce_tool_truncation   # (1) lower the per-tool max-chars truncation limit
+    - drop_model_tier          # (2) move the stage to the next-cheaper model tier
+    - limit_recent_filings     # (3) reader only: use just the 2 most recent filings
+  # Multiplier applied to tool truncation limits when reduce_tool_truncation fires.
+  reduced_truncation_factor: 0.5

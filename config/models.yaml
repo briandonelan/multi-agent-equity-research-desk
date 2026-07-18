@@ -1,0 +1,21 @@
+# Stage -> Claude model string.
+# Verified against the installed claude-agent-sdk / Anthropic model catalog at build time
+# (2026-07). Newest model in each tier is used. An earlier design draft's illustrative
+# examples named claude-sonnet-4-6; we use the newer claude-sonnet-5 (Sonnet-tier) instead.
+#
+# Tiers: screener=Haiku (cheap intent->filters), reader=Sonnet (evidence drafting),
+#        critic=Opus (hardest adversarial reasoning), synthesizer=Sonnet, baseline=Sonnet.
+stages:
+  screener: claude-haiku-4-5
+  reader: claude-sonnet-5
+  critic: claude-opus-4-8
+  synthesizer: claude-sonnet-5
+  baseline: claude-sonnet-5
+  judge: claude-opus-4-8   # LLM-as-judge: most capable tier, temperature-0 equivalent
+
+# Ordered cheapest -> most expensive. Used by the degradation ladder to drop a stage
+# to the next-cheaper tier when a soft budget cap is exceeded.
+tier_order:
+  - claude-haiku-4-5
+  - claude-sonnet-5
+  - claude-opus-4-8

@@ -1,0 +1,94 @@
+# Synthetic screener fixture universe (~40 tickers). Values are hand-engineered so every golden
+# query in screener_suite.yaml has an unambiguous expected answer set. Fake tickers and company
+# names — nothing here is a real security. The `# story` on each row is the golden-set rationale.
+#
+# Operationalized fuzzy terms (the golden labels assume these):
+#   mid-cap      = market_cap in [2e9, 10e9)      large-cap = market_cap >= 10e9
+#   undervalued  = trailing_pe < 15               cheap     = trailing_pe < 12
+#   improving/expanding margins = operating_margin_trend > 0   (deteriorating = < 0)
+#   quality      = operating_margin > 0.25 AND net_debt_to_ebitda < 1
+#   low leverage = net_debt_to_ebitda < 1         net cash = net_debt_to_ebitda < 0
+#   strong revenue growth = revenue_growth_yoy > 0.15
+#   steady revenue = revenue_growth_yoy in [0, 0.05]
+#   profitable   = operating_margin > 0           defensive = sector in {Healthcare, Utilities}
+#
+# fields: ticker, company_name, sector, market_cap, trailing_pe, revenue_ttm,
+#         revenue_growth_yoy, gross_margin, operating_margin, gross_margin_trend,
+#         operating_margin_trend, net_debt_to_ebitda
+
+tickers:
+  # --- Industrials (10) ---
+  - {ticker: IND1, company_name: Atlas Freight Corp, sector: Industrials, market_cap: 25.0e9, trailing_pe: null, revenue_ttm: 40.0e9, revenue_growth_yoy: 0.03, gross_margin: 0.30, operating_margin: 0.15, gross_margin_trend: 0.005, operating_margin_trend: 0.01, net_debt_to_ebitda: 2.5}
+  # IND1: large-cap with NO trailing P/E (null) — tests that pe filters don't treat None as 0.
+  - {ticker: IND2, company_name: Beacon Tools Inc, sector: Industrials, market_cap: 5.0e9, trailing_pe: 12.0, revenue_ttm: 6.0e9, revenue_growth_yoy: 0.06, gross_margin: 0.35, operating_margin: 0.18, gross_margin_trend: 0.01, operating_margin_trend: 0.02, net_debt_to_ebitda: 1.8}
+  # IND2: clean undervalued mid-cap industrial with improving margins — core of q03/q04.
+  - {ticker: IND3, company_name: Cobalt Machinery, sector: Industrials, market_cap: 6.0e9, trailing_pe: 9.0, revenue_ttm: 7.0e9, revenue_growth_yoy: 0.02, gross_margin: 0.28, operating_margin: 0.10, gross_margin_trend: -0.02, operating_margin_trend: -0.03, net_debt_to_ebitda: 2.0}
+  # IND3: THE TRAP — cheapest P/E of the mid-caps but margins are collapsing. Must be EXCLUDED from
+  #       any "improving margins" query. Near-duplicate of IND2 except the margin trend sign + P/E.
+  - {ticker: IND4, company_name: Delta Castings, sector: Industrials, market_cap: 4.0e9, trailing_pe: null, revenue_ttm: 5.0e9, revenue_growth_yoy: 0.04, gross_margin: 0.20, operating_margin: -0.05, gross_margin_trend: 0.01, operating_margin_trend: 0.02, net_debt_to_ebitda: 3.0}
+  # IND4: improving trend but operating_margin < 0 and no positive P/E (loss-maker). Excluded by
+  #       "profitable" and by any valuation filter. Tests the profit gate + a third null-P/E case.
+  - {ticker: IND5, company_name: Everest Pumps, sector: Industrials, market_cap: 7.0e9, trailing_pe: 14.0, revenue_ttm: 8.0e9, revenue_growth_yoy: 0.07, gross_margin: 0.33, operating_margin: 0.16, gross_margin_trend: 0.012, operating_margin_trend: 0.015, net_debt_to_ebitda: 1.5}
+  # IND5: core undervalued mid-cap industrial with improving margins (q03/q04).
+  - {ticker: IND6, company_name: Forge Dynamics, sector: Industrials, market_cap: 8.0e9, trailing_pe: 18.0, revenue_ttm: 9.0e9, revenue_growth_yoy: 0.05, gross_margin: 0.36, operating_margin: 0.19, gross_margin_trend: 0.008, operating_margin_trend: 0.02, net_debt_to_ebitda: 0.5}
+  # IND6: improving mid-cap industrial but P/E 18 (not undervalued) — in q03, out of q04; low leverage (q02).
+  - {ticker: IND7, company_name: Granite Controls, sector: Industrials, market_cap: 3.0e9, trailing_pe: 11.0, revenue_ttm: 3.5e9, revenue_growth_yoy: 0.09, gross_margin: 0.40, operating_margin: 0.22, gross_margin_trend: 0.02, operating_margin_trend: 0.03, net_debt_to_ebitda: 1.2}
+  # IND7: the star — cheap, improving, high-margin mid-cap industrial (q03, q04, q08).
+  - {ticker: IND8, company_name: Harbor Industrial, sector: Industrials, market_cap: 10.0e9, trailing_pe: 15.0, revenue_ttm: 11.0e9, revenue_growth_yoy: 0.04, gross_margin: 0.32, operating_margin: 0.17, gross_margin_trend: 0.006, operating_margin_trend: 0.01, net_debt_to_ebitda: 0.8}
+  # IND8: BOUNDARY — market_cap exactly 10.0e9. Under [2e9, 10e9) it is large-cap, not mid-cap.
+  #       Tests whether the screener uses < vs <=. Low leverage (q02).
+  - {ticker: IND9, company_name: Ironwood Mfg, sector: Industrials, market_cap: 9.0e9, trailing_pe: 16.0, revenue_ttm: 10.0e9, revenue_growth_yoy: 0.05, gross_margin: 0.31, operating_margin: 0.14, gross_margin_trend: 0.005, operating_margin_trend: 0.01, net_debt_to_ebitda: 2.2}
+  # IND9: improving mid-cap industrial, P/E 16 — just over the undervalued line. Defensible q04 extra.
+  - {ticker: IND10, company_name: Juniper Systems, sector: Industrials, market_cap: 15.0e9, trailing_pe: 10.0, revenue_ttm: 18.0e9, revenue_growth_yoy: 0.08, gross_margin: 0.34, operating_margin: 0.20, gross_margin_trend: 0.015, operating_margin_trend: 0.02, net_debt_to_ebitda: 0.9}
+  # IND10: large-cap but cheap and improving (q08 is cap-agnostic); low leverage (q02).
+
+  # --- Technology (9) ---
+  - {ticker: TEC1, company_name: Nimbus Cloud, sector: Technology, market_cap: 80.0e9, trailing_pe: 40.0, revenue_ttm: 30.0e9, revenue_growth_yoy: 0.25, gross_margin: 0.75, operating_margin: 0.30, gross_margin_trend: 0.02, operating_margin_trend: 0.03, net_debt_to_ebitda: 0.2}
+  # TEC1: large, fast-growing, high-margin, low-lev — q05 (quality) and q07 (large + growth).
+  - {ticker: TEC2, company_name: Vertex Semis, sector: Technology, market_cap: 50.0e9, trailing_pe: 28.0, revenue_ttm: 25.0e9, revenue_growth_yoy: 0.12, gross_margin: 0.55, operating_margin: 0.28, gross_margin_trend: 0.01, operating_margin_trend: 0.02, net_debt_to_ebitda: 0.8}
+  # TEC2: quality (om .28 > .25, ndte .8 < 1) but growth .12 < .15 — in q05, out of q07.
+  - {ticker: TEC3, company_name: Quill Software, sector: Technology, market_cap: 6.0e9, trailing_pe: 35.0, revenue_ttm: 2.0e9, revenue_growth_yoy: 0.30, gross_margin: 0.80, operating_margin: 0.15, gross_margin_trend: 0.03, operating_margin_trend: 0.04, net_debt_to_ebitda: 0.0}
+  # TEC3: mid-cap tech (q01), high growth but om .15 < .25 (not quality).
+  - {ticker: TEC4, company_name: Pylon Data, sector: Technology, market_cap: 120.0e9, trailing_pe: 45.0, revenue_ttm: 60.0e9, revenue_growth_yoy: 0.20, gross_margin: 0.70, operating_margin: 0.35, gross_margin_trend: 0.01, operating_margin_trend: 0.02, net_debt_to_ebitda: 0.5}
+  # TEC4: mega, quality, growing — q05, q07.
+  - {ticker: TEC5, company_name: Basalt Chips, sector: Technology, market_cap: 15.0e9, trailing_pe: 22.0, revenue_ttm: 20.0e9, revenue_growth_yoy: 0.10, gross_margin: 0.45, operating_margin: 0.24, gross_margin_trend: 0.005, operating_margin_trend: 0.01, net_debt_to_ebitda: 1.5}
+  # TEC5: large, but om .24 < .25 and ndte 1.5 > 1 (not quality), growth .10 (not q07).
+  - {ticker: TEC6, company_name: Cirrus Networks, sector: Technology, market_cap: 4.0e9, trailing_pe: 30.0, revenue_ttm: 3.0e9, revenue_growth_yoy: 0.22, gross_margin: 0.60, operating_margin: 0.18, gross_margin_trend: 0.02, operating_margin_trend: 0.02, net_debt_to_ebitda: 1.0}
+  # TEC6: mid-cap tech (q01), growing, but not large and not quality.
+  - {ticker: TEC7, company_name: Onyx Analytics, sector: Technology, market_cap: 12.0e9, trailing_pe: 26.0, revenue_ttm: 8.0e9, revenue_growth_yoy: 0.16, gross_margin: 0.65, operating_margin: 0.12, gross_margin_trend: 0.01, operating_margin_trend: 0.01, net_debt_to_ebitda: 2.5}
+  # TEC7: large + growth .16 > .15 (q07), but om .12 (not quality).
+  - {ticker: TEC8, company_name: Halcyon AI, sector: Technology, market_cap: 200.0e9, trailing_pe: null, revenue_ttm: 50.0e9, revenue_growth_yoy: 0.35, gross_margin: 0.72, operating_margin: 0.28, gross_margin_trend: 0.03, operating_margin_trend: 0.04, net_debt_to_ebitda: 0.0}
+  # TEC8: mega, no P/E (null — second None-P/E case), quality + growth — q05, q07.
+  - {ticker: TEC9, company_name: Slate Devices, sector: Technology, market_cap: 30.0e9, trailing_pe: 18.0, revenue_ttm: 40.0e9, revenue_growth_yoy: 0.05, gross_margin: 0.38, operating_margin: 0.22, gross_margin_trend: 0.005, operating_margin_trend: 0.005, net_debt_to_ebitda: 1.2}
+  # TEC9: large, slow-growth, om .22 (not quality) — a distractor for growth/quality queries.
+
+  # --- Healthcare (9) ---
+  - {ticker: HLT1, company_name: Meridian Pharma, sector: Healthcare, market_cap: 60.0e9, trailing_pe: 16.0, revenue_ttm: 40.0e9, revenue_growth_yoy: 0.04, gross_margin: 0.70, operating_margin: 0.30, gross_margin_trend: 0.005, operating_margin_trend: 0.005, net_debt_to_ebitda: 1.0}
+  # HLT1: defensive, steady revenue (.04) — q09.
+  - {ticker: HLT2, company_name: Cedar Biotech, sector: Healthcare, market_cap: 20.0e9, trailing_pe: 30.0, revenue_ttm: 8.0e9, revenue_growth_yoy: 0.28, gross_margin: 0.85, operating_margin: 0.20, gross_margin_trend: 0.02, operating_margin_trend: 0.03, net_debt_to_ebitda: 0.3}
+  # HLT2: large healthcare with strong growth — q06.
+  - {ticker: HLT3, company_name: Willow Devices, sector: Healthcare, market_cap: 5.0e9, trailing_pe: 22.0, revenue_ttm: 3.0e9, revenue_growth_yoy: 0.12, gross_margin: 0.60, operating_margin: 0.18, gross_margin_trend: 0.01, operating_margin_trend: 0.01, net_debt_to_ebitda: 1.5}
+  # HLT3: mid-cap healthcare — distractor (not large, growth below strong).
+  - {ticker: HLT4, company_name: Sage Diagnostics, sector: Healthcare, market_cap: 12.0e9, trailing_pe: 25.0, revenue_ttm: 6.0e9, revenue_growth_yoy: 0.20, gross_margin: 0.68, operating_margin: 0.22, gross_margin_trend: 0.015, operating_margin_trend: 0.02, net_debt_to_ebitda: 0.5}
+  # HLT4: large healthcare with strong growth — q06.
+  - {ticker: HLT5, company_name: Thorne Health, sector: Healthcare, market_cap: 15.0e9, trailing_pe: 14.0, revenue_ttm: 25.0e9, revenue_growth_yoy: 0.03, gross_margin: 0.55, operating_margin: 0.25, gross_margin_trend: 0.005, operating_margin_trend: 0.005, net_debt_to_ebitda: 0.8}
+  # HLT5: defensive, steady (.03) — q09.
+  - {ticker: HLT6, company_name: Larkspur Labs, sector: Healthcare, market_cap: 3.0e9, trailing_pe: 18.0, revenue_ttm: 2.0e9, revenue_growth_yoy: 0.02, gross_margin: 0.62, operating_margin: 0.15, gross_margin_trend: 0.005, operating_margin_trend: 0.005, net_debt_to_ebitda: -0.5}
+  # HLT6: the only NET-CASH name (ndte < 0) with expanding margins — the lone match for starve q12.
+  - {ticker: HLT7, company_name: Aspen Care, sector: Healthcare, market_cap: 30.0e9, trailing_pe: 20.0, revenue_ttm: 35.0e9, revenue_growth_yoy: 0.05, gross_margin: 0.50, operating_margin: 0.18, gross_margin_trend: 0.005, operating_margin_trend: 0.005, net_debt_to_ebitda: 1.2}
+  # HLT7: defensive, steady (.05 boundary of steady) — q09.
+  - {ticker: HLT8, company_name: Vireo Genomics, sector: Healthcare, market_cap: 4.0e9, trailing_pe: 40.0, revenue_ttm: 1.5e9, revenue_growth_yoy: 0.40, gross_margin: 0.80, operating_margin: -0.10, gross_margin_trend: 0.03, operating_margin_trend: 0.02, net_debt_to_ebitda: 0.0}
+  # HLT8: hyper-growth but deeply unprofitable mid-cap — distractor for growth queries.
+  - {ticker: HLT9, company_name: Quince Medical, sector: Healthcare, market_cap: 18.0e9, trailing_pe: 24.0, revenue_ttm: 10.0e9, revenue_growth_yoy: 0.19, gross_margin: 0.66, operating_margin: 0.21, gross_margin_trend: 0.01, operating_margin_trend: 0.02, net_debt_to_ebitda: 0.9}
+  # HLT9: large healthcare, growth .19 > .15 — q06.
+
+  # --- Long tail: small sectors (distractors / selectivity) ---
+  - {ticker: ENE1, company_name: Basin Energy, sector: Energy, market_cap: 40.0e9, trailing_pe: 8.0, revenue_ttm: 60.0e9, revenue_growth_yoy: -0.05, gross_margin: 0.25, operating_margin: 0.18, gross_margin_trend: -0.01, operating_margin_trend: -0.02, net_debt_to_ebitda: 1.0}
+  - {ticker: ENE2, company_name: Cardinal Oil, sector: Energy, market_cap: 6.0e9, trailing_pe: 7.0, revenue_ttm: 9.0e9, revenue_growth_yoy: 0.01, gross_margin: 0.22, operating_margin: 0.14, gross_margin_trend: 0.0, operating_margin_trend: 0.0, net_debt_to_ebitda: 1.6}
+  - {ticker: FIN1, company_name: Sterling Bank, sector: Financials, market_cap: 45.0e9, trailing_pe: 11.0, revenue_ttm: 20.0e9, revenue_growth_yoy: 0.06, gross_margin: null, operating_margin: null, gross_margin_trend: null, operating_margin_trend: null, net_debt_to_ebitda: null}
+  # FIN1: financials with null margins/leverage (bank accounting) — must not crash margin/leverage filters.
+  - {ticker: FIN2, company_name: Keystone Capital, sector: Financials, market_cap: 3.0e9, trailing_pe: 9.0, revenue_ttm: 2.0e9, revenue_growth_yoy: 0.04, gross_margin: null, operating_margin: null, gross_margin_trend: null, operating_margin_trend: null, net_debt_to_ebitda: null}
+  - {ticker: MAT1, company_name: Redstone Materials, sector: Materials, market_cap: 12.0e9, trailing_pe: 13.0, revenue_ttm: 15.0e9, revenue_growth_yoy: 0.03, gross_margin: 0.24, operating_margin: 0.12, gross_margin_trend: 0.002, operating_margin_trend: 0.005, net_debt_to_ebitda: 1.4}
+  - {ticker: MAT2, company_name: Quarry Chemicals, sector: Materials, market_cap: 4.0e9, trailing_pe: 15.0, revenue_ttm: 5.0e9, revenue_growth_yoy: 0.05, gross_margin: 0.30, operating_margin: 0.16, gross_margin_trend: 0.01, operating_margin_trend: 0.01, net_debt_to_ebitda: 2.1}
+  - {ticker: UTL1, company_name: Gridline Power, sector: Utilities, market_cap: 22.0e9, trailing_pe: 17.0, revenue_ttm: 14.0e9, revenue_growth_yoy: 0.02, gross_margin: 0.45, operating_margin: 0.22, gross_margin_trend: 0.003, operating_margin_trend: 0.004, net_debt_to_ebitda: 3.5}
+  - {ticker: UTL2, company_name: Meadow Water, sector: Utilities, market_cap: 5.0e9, trailing_pe: 19.0, revenue_ttm: 3.0e9, revenue_growth_yoy: 0.01, gross_margin: 0.50, operating_margin: 0.25, gross_margin_trend: 0.002, operating_margin_trend: 0.003, net_debt_to_ebitda: 4.0}
