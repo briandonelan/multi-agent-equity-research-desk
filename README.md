@@ -223,4 +223,3 @@ stages are driven by a `FakeAgentRunner` / `CallbackAgentRunner` that replays re
 
 _This memo generator is an engineering demonstration of multi-agent orchestration. Nothing it
 produces is investment advice or a recommendation to transact in any security._
-# multi-agent-equity-research-desk
